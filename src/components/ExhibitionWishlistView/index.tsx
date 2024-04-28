@@ -1,49 +1,62 @@
 import styled from 'styled-components';
 import { Button, Col, Flex, Typography } from 'antd';
+import { ReactComponent as FilledStarIcon } from '@assets/icons/FilledStar.svg';
+import { ReactComponent as EmptyStarIcon } from '@assets/icons/EmptyStar.svg';
 import { IExhibitionInfo } from '@../../types/index';
-import { ReactComponent as EmptyStar } from '../../assets/icons/EmptyStar.svg';
-export const ExhibitionWishlistView = (props: { exhibitionWishList: IExhibitionInfo[] }) => {
-  const { exhibitionWishList } = props;
-  const articleList = exhibitionWishList.map((list: IExhibitionInfo) => (
-    <ListContainer>
-      <ImageBox src={list.imageUrl} alt="Image" />
-      <ExhibitionInfo>
-        <Flex justify="space-between">
-          <Typography>{list.title}</Typography>
-          <div>
-            <EmptyStar />
-          </div>
-        </Flex>
-        {/* <Col span={24}></Col> */}
-        <Col span={24}>{list.place}</Col>
-        <Col span={24}>{list.price}</Col>
-        <Col span={24}>
-          <Flex justify="space-between">
-            <div>
-              {list.date.started}~{list.date.ended}
-            </div>
+import { useExhibitionStore } from '@src/Store';
 
-            <div style={{}}>
-              <Button
-                style={{
-                  width: '40px',
-                  height: '16px',
-                  borderRadius: '4px',
-                  fontSize: '8px',
-                  textAlign: 'center',
-                  padding: '0px',
-                }}
-              >
-                예매하기
-              </Button>
+export const ExhibitionWishlistView = (props: { viewData: IExhibitionInfo }) => {
+  const {
+    id: exhibitionId,
+    place: placeName,
+    imageUrl: imgUrl,
+    price: exhibitionPrice,
+    title: exhibitionTitle,
+    date: { started: displayStart, ended: displayEnd },
+  } = props.viewData;
+
+  // const placeName = viewData.place
+  const { wishExhibitionList, addWishtExhibitionList, deleteWishExhibitionList } =
+    useExhibitionStore();
+
+  const isWishExhibition = wishExhibitionList.includes(exhibitionId);
+
+  // 찜하기 기능 함수.
+  const handleWishExhibitionOnClick = () => {
+    if (isWishExhibition) {
+      deleteWishExhibitionList(exhibitionId);
+    } else if (!isWishExhibition) {
+      addWishtExhibitionList(exhibitionId);
+    }
+  };
+
+  return (
+    <>
+      <ListContainer>
+        <ImageBox src={imgUrl} alt="Image" />
+        <ExhibitionInfo>
+          <Flex justify="space-between">
+            <Typography>{exhibitionTitle}</Typography>
+            <div onClick={handleWishExhibitionOnClick}>
+              {isWishExhibition ? <FilledStarIcon /> : <EmptyStarIcon />}
             </div>
           </Flex>
-        </Col>
-      </ExhibitionInfo>
-    </ListContainer>
-  ));
-
-  return <>{articleList}</>;
+          <Col span={24}>{placeName}</Col>
+          <Col span={24}>{exhibitionPrice}</Col>
+          <Col span={24}>
+            <Flex justify="space-between">
+              <div>
+                {displayStart}~{displayEnd}
+              </div>
+              <div>
+                <TicketButton>예매하기</TicketButton>
+              </div>
+            </Flex>
+          </Col>
+        </ExhibitionInfo>
+      </ListContainer>
+    </>
+  );
 };
 
 const ListContainer = styled.div`
@@ -64,4 +77,13 @@ const ImageBox = styled.img`
 const ExhibitionInfo = styled.div`
   width: 100%;
   margin-left: 10px;
+`;
+
+const TicketButton = styled.button`
+  width: 40px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: 8px;
+  text-align: center;
+  padding: 0px;
 `;

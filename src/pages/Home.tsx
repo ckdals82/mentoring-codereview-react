@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getApiExhibitionList } from '@src/apis';
 import { ExhibitionWishlistView } from '@components/ExhibitionWishlistView';
 import { IExhibitionInfo } from '@../../types/index';
+import { Flex } from 'antd';
 
 const Home = () => {
   const [exhibitionList, setExhibitionList] = useState<IExhibitionInfo[]>([]);
@@ -21,9 +22,13 @@ const Home = () => {
   }, []);
 
   return (
-    <>
-      <ExhibitionWishlistView exhibitionWishList={exhibitionList} />
-    </>
+    <Flex justify="center">
+      <Flex vertical={true}>
+        {exhibitionList.map((exhibtionData) => {
+          return <ExhibitionWishlistView viewData={exhibtionData} />;
+        })}
+      </Flex>
+    </Flex>
   );
 };
 
