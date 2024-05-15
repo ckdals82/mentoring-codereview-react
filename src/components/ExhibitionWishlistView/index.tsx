@@ -4,6 +4,7 @@ import { ReactComponent as FilledStarIcon } from '@assets/icons/FilledStar.svg';
 import { ReactComponent as EmptyStarIcon } from '@assets/icons/EmptyStar.svg';
 import { IExhibitionInfo } from '@../../types/index';
 import { useExhibitionStore } from '@src/Store';
+import { useNavigate } from 'react-router-dom';
 
 export const ExhibitionWishlistView = (props: { viewData: IExhibitionInfo }) => {
   const {
@@ -14,6 +15,8 @@ export const ExhibitionWishlistView = (props: { viewData: IExhibitionInfo }) => 
     title: exhibitionTitle,
     date: { started: displayStart, ended: displayEnd },
   } = props.viewData;
+
+  const navigate = useNavigate();
 
   // const placeName = viewData.place
   const { wishExhibitionList, addWishtExhibitionList, deleteWishExhibitionList } =
@@ -49,7 +52,9 @@ export const ExhibitionWishlistView = (props: { viewData: IExhibitionInfo }) => 
                 {displayStart}~{displayEnd}
               </div>
               <div>
-                <TicketButton>예매하기</TicketButton>
+                <TicketButton onClick={() => navigate(`/ticket?id=${exhibitionId}`)}>
+                  예매하기
+                </TicketButton>
               </div>
             </Flex>
           </Col>
