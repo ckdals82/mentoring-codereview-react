@@ -1,6 +1,11 @@
 import { Modal } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+interface TicketButtonProps {
+  cancel?: boolean;
+}
 
 const BookingModal = (props: { open: boolean; onClose: Function }) => {
   const { open, onClose } = props;
@@ -14,23 +19,25 @@ const BookingModal = (props: { open: boolean; onClose: Function }) => {
   const customFooter = (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {isBooked ? (
-        <button
+        <TicketButton
           onClick={() => {
             navigate('/');
           }}
         >
           확인
-        </button>
+        </TicketButton>
       ) : (
         <>
-          <button
+          <TicketButton
             onClick={() => {
               setIsBooked(true);
             }}
           >
             확인
-          </button>
-          <button onClick={handleModalClose}>취소</button>
+          </TicketButton>
+          <TicketButton cancel={true} onClick={handleModalClose}>
+            취소
+          </TicketButton>
         </>
       )}
     </div>
@@ -51,3 +58,12 @@ const BookingModal = (props: { open: boolean; onClose: Function }) => {
 };
 
 export default BookingModal;
+
+const TicketButton = styled.button<TicketButtonProps>`
+  width: 100%;
+  height: 59px;
+  border-radius: 4px;
+  border-color: white;
+  background-color: ${(props) => (props.cancel ? '#FFFFFF' : '#ffbf66')};
+  color: ${(props) => (props.cancel ? '#ffbf66' : 'white')};
+`;
